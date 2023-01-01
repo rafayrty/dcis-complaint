@@ -1,7 +1,9 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { StoreComplaint } from "../requests/complaints";
 import * as Yup from "yup";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const AddComplaintSchema = Yup.object().shape({
   name: Yup.string()
@@ -17,15 +19,25 @@ const AddComplaintSchema = Yup.object().shape({
   department: Yup.string().required("This Field is Required"),
 });
 const AddComplaint = () => {
-  const mutation = useMutation(StoreComplaint);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const mutation = useMutation(StoreComplaint, {
+    onSuccess() {
+      toast.success("Complaint Added Successfully");
+
+      queryClient.invalidateQueries({ queryKey: ["complaints"] });
+      navigate(-1);
+    },
+  });
+
   return (
     <div className="add-complaint mb-12">
       <div className="main-content mt-12 container-width">
-        <h1 className="text-indigo-600 font-bold text-3xl">
-          Add a New Complaint
-        </h1>
         <div>
-          <div className="mt-12 md:grid md:grid-cols-3 md:gap-6">
+          <h1 className="ml-3 lg:ml-0 text-indigo-600 font-bold text-3xl">
+            Add a New Complaint
+          </h1>
+          <div className="mt-6 lg:mt-8 md:grid md:grid-cols-3 md:gap-6">
             <div className="md:col-span-1">
               <div className="px-4 sm:px-0">
                 <h3 className="text-lg font-medium leading-6 text-gray-900">

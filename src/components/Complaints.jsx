@@ -1,8 +1,23 @@
 import React from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { GetComplaints } from "../requests/complaints";
+
+const GetPriorityColor = (priority) => {
+  let array = [
+    { bg: "rgb(255, 48, 79,0.4)", fg: "rgb(255, 48, 79,1)" },
+    { bg: "rgba(250, 207, 90,0.4)", fg: "rgba(250, 207, 90,1)" },
+    { bg: "rgba(44, 185, 120,0.3)", fg: "rgba(44, 185, 120,1)" },
+  ];
+  return array[priority - 1];
+};
 export default function Complaints() {
-  const { data: complaints } = useQuery(["complaints"], GetComplaints);
+  const [filter, setFilter] = React.useState("");
+  const { data } = useQuery(["complaints"], GetComplaints);
+  //const data_complaints = data?.data.data;
+  const data_complaints = data?.data?.data
+    ? data.data.data.filter((complaint) => complaint.id.includes(filter))
+    : data?.data?.data;
+
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto">
@@ -15,6 +30,9 @@ export default function Complaints() {
               type="text"
               name="hs-table-search"
               id="hs-table-search"
+              onChange={(e) => {
+                setFilter(e.target.value);
+              }}
               className="block border w-full p-3 pl-10 text-sm border-gray-200 rounded-md focus:border-blue-500 focus:ring-blue-500 w-full"
               placeholder="Search..."
             />
@@ -32,7 +50,6 @@ export default function Complaints() {
             </div>
           </div>
         </div>
-        {JSON.stringify(complaints)}
         <div className="p-1.5 w-full inline-block align-middle">
           <div className="overflow-hidden border rounded-lg">
             <table className="min-w-full divide-y divide-gray-200">
@@ -43,122 +60,90 @@ export default function Complaints() {
                     className="flex items-center px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
                   >
                     ID
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-4 h-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={1}
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M17 13l-5 5m0 0l-5-5m5 5V6"
-                      />
-                    </svg>
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
                   >
-                    <span className="inline-flex items-center">
-                      Name
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-4 h-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M7 11l5-5m0 0l5 5m-5-5v12"
-                        />
-                      </svg>
-                    </span>
+                    <span className="inline-flex items-center">Name</span>
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
                   >
-                    <span className="inline-flex items-center">
-                      Email
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-4 h-4"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M17 13l-5 5m0 0l-5-5m5 5V6"
-                        />
-                      </svg>
-                    </span>
+                    <span className="inline-flex items-center">Email</span>
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-xs font-bold text-right text-gray-500 uppercase "
+                    className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
                   >
-                    Edit
+                    <span className="inline-flex items-center">Department</span>
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-xs font-bold text-right text-gray-500 uppercase "
+                    className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
                   >
-                    Delete
+                    <span className="inline-flex items-center">Priority</span>
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
+                  >
+                    <span className="inline-flex items-center">Date Added</span>
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
+                  >
+                    <span className="inline-flex items-center">View</span>
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                <tr>
-                  <td className="px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap">
-                    1
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                    Jone Doe
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                    jonne62@gmail.com
-                  </td>
-                  <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                    <a className="text-green-500 hover:text-green-700" href="#">
-                      Edit
-                    </a>
-                  </td>
-                  <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                    <a className="text-red-500 hover:text-red-700" href="#">
-                      Delete
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap">
-                    1
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                    Jone Doe
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                    jonne62@gmail.com
-                  </td>
-                  <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                    <a className="text-green-500 hover:text-green-700" href="#">
-                      Edit
-                    </a>
-                  </td>
-                  <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                    <a className="text-red-500 hover:text-red-700" href="#">
-                      Delete
-                    </a>
-                  </td>
-                </tr>
+                {data_complaints?.map((complaint, index) => {
+                  return (
+                    <tr>
+                      <td className="px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap">
+                        {complaint.id}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
+                        {complaint.name}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
+                        {complaint.email}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
+                        {complaint.department}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
+                        <span
+                          className="px-3 rounded-lg font-bold py-2"
+                          style={{
+                            backgroundColor: GetPriorityColor(
+                              complaint.priority
+                            ).bg,
+                            color: GetPriorityColor(complaint.priority).fg,
+                          }}
+                        >
+                          {complaint.priority == 1 ? "High" : ""}
+                          {complaint.priority == 2 ? "Medium" : ""}
+                          {complaint.priority == 3 ? "Low" : ""}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
+                        {new Date(complaint.date_added).toLocaleString()}
+                      </td>
+                      <td className="px-6 py-4 text-sm font-medium  whitespace-nowrap">
+                        <a
+                          className="text-green-500 hover:text-green-700"
+                          href="#"
+                        >
+                          View
+                        </a>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
