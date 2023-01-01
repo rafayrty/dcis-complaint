@@ -1,11 +1,12 @@
+import Complaints from "../components/Complaints";
+import CTA from "../components/CTA";
 const Home = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p className="text-xl mt-4">
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-      </header>
+    <div className="Home">
+      <CTA />
+      <div className="main-content container-width">
+        <Complaints />
+      </div>
     </div>
   );
 };
