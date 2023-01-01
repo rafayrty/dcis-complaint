@@ -7,7 +7,8 @@ import Home from "./pages/Home";
 import axios from "axios";
 import AddComplaint from "./pages/AddComplaint";
 function App() {
-  axios.defaults.baseURL = "https://a89c-111-68-99-197.in.ngrok.io/api";
+  axios.defaults.baseURL =
+    "https://cors-anywhere.herokuapp.com/https://31eb-111-68-99-197.in.ngrok.io/api";
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>

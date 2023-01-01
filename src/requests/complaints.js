@@ -4,9 +4,9 @@ const GetComplaints = async () => {
 };
 
 const StoreComplaint = async (data) => {
-  data = { name: "Abdul Rafay", dept: "DEEE", from: "Student" };
   return await axios.post("/complaints/store", data, {
-    headers: { "ngrok-skip-browser-warning": "any" },
+    headers: { "Content-Type": "application/json" },
+    withCredentials: false,
   });
 };
 export { GetComplaints, StoreComplaint };
