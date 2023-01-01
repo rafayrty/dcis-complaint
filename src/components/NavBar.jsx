@@ -2,13 +2,19 @@ import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-
+import React from "react";
 const navigation = [{ name: "Home", href: "/", current: true }];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 export default function NavBar() {
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  React.useEffect(() => {
+    if (localStorage.getItem("logged_in")) {
+      setIsLoggedIn(true);
+    }
+  }, []);
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -52,15 +58,21 @@ export default function NavBar() {
                   </div>
                 </div>
               </div>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                <button
-                  type="button"
-                  className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                >
-                  <span className="sr-only">View notifications</span>
-                  Login
-                </button>
-              </div>
+              {isLoggedIn && (
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsLoggedIn(false);
+                      localStorage.removeItem("logged_in");
+                      window.location.href = "/";
+                    }}
+                    className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 

@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import Home from "./pages/Home";
 import axios from "axios";
 import AddComplaint from "./pages/AddComplaint";
+import AdminLogin from "./pages/AdminLogin";
+import ViewComplaint from "./pages/ViewComplaint";
+import EditComplaint from "./pages/EditComplaint";
 function App() {
   axios.defaults.baseURL =
     "https://cors-anywhere.herokuapp.com/https://31eb-111-68-99-197.in.ngrok.io/api";
@@ -16,6 +19,9 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="add-complaint" element={<AddComplaint />} />
+            <Route path="admin/login" element={<AdminLogin />} />
+            <Route path="view-complaint/:id" element={<ViewComplaint />} />
+            <Route path="edit-complaint/:id" element={<EditComplaint />} />
             <Route path="*" element={<strong>Not Found</strong>} />
           </Route>
         </Routes>

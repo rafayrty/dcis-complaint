@@ -1,6 +1,7 @@
 import React from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { GetComplaints } from "../requests/complaints";
+import { Link } from "react-router-dom";
 
 const GetPriorityColor = (priority) => {
   let array = [
@@ -12,12 +13,18 @@ const GetPriorityColor = (priority) => {
 };
 export default function Complaints() {
   const [filter, setFilter] = React.useState("");
-  const { data } = useQuery(["complaints"], GetComplaints);
+  const { data, isLoading } = useQuery(["complaints"], GetComplaints);
   //const data_complaints = data?.data.data;
   const data_complaints = data?.data?.data
     ? data.data.data.filter((complaint) => complaint.id.includes(filter))
     : data?.data?.data;
 
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  React.useEffect(() => {
+    if (localStorage.getItem("logged_in")) {
+      setIsLoggedIn(true);
+    }
+  }, []);
   return (
     <div className="flex flex-col">
       <div className="overflow-x-auto">
@@ -51,102 +58,140 @@ export default function Complaints() {
           </div>
         </div>
         <div className="p-1.5 w-full inline-block align-middle">
-          <div className="overflow-hidden border rounded-lg">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="flex items-center px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
-                  >
-                    ID
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
-                  >
-                    <span className="inline-flex items-center">Name</span>
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
-                  >
-                    <span className="inline-flex items-center">Email</span>
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
-                  >
-                    <span className="inline-flex items-center">Department</span>
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
-                  >
-                    <span className="inline-flex items-center">Priority</span>
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
-                  >
-                    <span className="inline-flex items-center">Date Added</span>
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
-                  >
-                    <span className="inline-flex items-center">View</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {data_complaints?.map((complaint, index) => {
-                  return (
-                    <tr>
-                      <td className="px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap">
-                        {complaint.id}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                        {complaint.name}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                        {complaint.email}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                        {complaint.department}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                        <span
-                          className="px-3 rounded-lg font-bold py-2"
-                          style={{
-                            backgroundColor: GetPriorityColor(
-                              complaint.priority
-                            ).bg,
-                            color: GetPriorityColor(complaint.priority).fg,
-                          }}
-                        >
-                          {complaint.priority == 1 ? "High" : ""}
-                          {complaint.priority == 2 ? "Medium" : ""}
-                          {complaint.priority == 3 ? "Low" : ""}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
-                        {new Date(complaint.date_added).toLocaleString()}
-                      </td>
-                      <td className="px-6 py-4 text-sm font-medium  whitespace-nowrap">
-                        <a
-                          className="text-green-500 hover:text-green-700"
-                          href="#"
-                        >
-                          View
-                        </a>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          {isLoading && (
+            <div className="loader flex mt-6 justify-center items-center">
+              <svg
+                class="animate-spin -ml-1 mr-3 h-12 w-12 text-indigo"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            </div>
+          )}
+          {!isLoading && (
+            <div className="overflow-hidden border rounded-lg">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="flex items-center px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
+                    >
+                      ID
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
+                    >
+                      <span className="inline-flex items-center">Name</span>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
+                    >
+                      <span className="inline-flex items-center">Email</span>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
+                    >
+                      <span className="inline-flex items-center">
+                        Department
+                      </span>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
+                    >
+                      <span className="inline-flex items-center">Priority</span>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
+                    >
+                      <span className="inline-flex items-center">
+                        Date Added
+                      </span>
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-xs font-bold text-left text-gray-500 uppercase "
+                    >
+                      <span className="inline-flex items-center">Actions</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {data_complaints?.map((complaint, index) => {
+                    return (
+                      <tr>
+                        <td className="px-6 py-4 text-sm font-medium text-gray-800 whitespace-nowrap">
+                          {complaint.id}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
+                          {complaint.name}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
+                          {complaint.email}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
+                          {complaint.department}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
+                          <span
+                            className="px-3 rounded-lg font-bold py-2"
+                            style={{
+                              backgroundColor: GetPriorityColor(
+                                complaint.priority
+                              ).bg,
+                              color: GetPriorityColor(complaint.priority).fg,
+                            }}
+                          >
+                            {complaint.priority == 1 ? "High" : ""}
+                            {complaint.priority == 2 ? "Medium" : ""}
+                            {complaint.priority == 3 ? "Low" : ""}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap">
+                          {new Date(complaint.date_added).toLocaleString()}
+                        </td>
+                        <td className="px-6 py-4 text-sm font-medium  whitespace-nowrap">
+                          <Link
+                            className="text-green-500 hover:text-green-700"
+                            to={`/view-complaint/${complaint.id}`}
+                          >
+                            View
+                          </Link>
+                          {isLoggedIn && (
+                            <Link
+                              className="ml-3 text-indigo-500 hover:text-indigo-700"
+                              to={`/edit-complaint/${complaint.id}`}
+                            >
+                              Edit
+                            </Link>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
     </div>
