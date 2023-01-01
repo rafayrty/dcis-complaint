@@ -4,7 +4,7 @@ const Home = () => {
   return (
     <div className="Home">
       <CTA />
-      <div className="main-content container-width mb-6 lg:mb-12">
+      <div className="main-content container-width mb-10 lg:mb-12">
         <Complaints />
       </div>
     </div>
