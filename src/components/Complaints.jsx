@@ -83,7 +83,7 @@ export default function Complaints() {
             </div>
           )}
           {!isLoading && (
-            <div className="overflow-hidden border rounded-lg">
+            <div className="overflow-auto border rounded-lg">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>

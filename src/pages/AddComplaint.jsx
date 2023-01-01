@@ -66,7 +66,7 @@ const AddComplaint = () => {
               >
                 {({ isSubmitting, errors, touched }) => (
                   <Form>
-                    <div className="overflow-hidden shadow sm:rounded-md">
+                    <div className="overflow-auto shadow sm:rounded-md">
                       <div className="bg-white px-4 py-5 sm:p-6">
                         <div className="grid grid-cols-6 gap-6">
                           <div className="col-span-12 sm:col-span-12">
